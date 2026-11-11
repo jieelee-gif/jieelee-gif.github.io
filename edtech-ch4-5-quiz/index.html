@@ -116,6 +116,15 @@
   .result button { background: var(--red); }
   .result button.ghost { background: transparent; color: #fff; border-color: #fff; }
   .hint { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
+  .student {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    border: 2px solid var(--navy); border-radius: 14px;
+    padding: 14px 18px; margin-bottom: 24px;
+  }
+  .student label { flex: 1 1 200px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 10px; }
+  .student input { flex: 1; font-weight: 400; }
+  .who { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
+  .who.missing { color: #ffd2cc; font-weight: 400; font-size: 0.95rem; }
   @media print {
     header { background: #fff; color: var(--text); }
     header p { color: var(--muted); }
@@ -135,13 +144,20 @@
 <main class="wrap">
   <div class="guide">
     모두 5문항입니다(객관식 2, 주관식 2, OX 1). 문항마다 <b>확인</b>을 누르면 정답과 해설이 바로 나옵니다.
-    끝까지 풀면 아래에 점수가 나옵니다. 답은 이 화면에만 보이고 어디에도 저장되지 않습니다.
+    끝까지 풀면 아래에 점수가 나옵니다. 이름·학번과 답은 이 화면에만 보이고 어디에도 저장되거나 전송되지 않습니다.
+    제출이 필요하면 결과를 인쇄하거나 화면을 캡처해 내세요.
   </div>
+
+  <section class="student">
+    <label>이름 <input type="text" id="sname" autocomplete="off" placeholder="예: 홍길동"></label>
+    <label>학번 <input type="text" id="sid" autocomplete="off" inputmode="numeric" placeholder="예: 20261234"></label>
+  </section>
 
   <div id="quiz"></div>
 
   <div class="result" id="result" hidden>
     <div>내 점수</div>
+    <div class="who" id="who"></div>
     <div class="score" id="score"></div>
     <p id="comment"></p>
     <button type="button" id="retry">다시 풀기</button>
@@ -339,8 +355,23 @@ function updateResult() {
   document.getElementById("comment").textContent = wrong.length === 0
     ? "모두 맞혔습니다. 4·5장의 핵심을 잘 이해하고 있어요."
     : `${wrong.join(", ")}번 문항의 해설을 다시 읽고, 표시된 PPT 슬라이드를 복습해 보세요.`;
+  updateWho();
   result.hidden = false;
 }
+
+function updateWho() {
+  const name = document.getElementById("sname").value.trim();
+  const sid = document.getElementById("sid").value.trim();
+  const who = document.getElementById("who");
+  if (name || sid) {
+    who.textContent = [sid, name].filter(Boolean).join("  ");
+    who.className = "who";
+  } else {
+    who.textContent = "맨 위에 이름과 학번을 입력하면 여기에 함께 표시됩니다.";
+    who.className = "who missing";
+  }
+}
+["sname", "sid"].forEach(id => document.getElementById(id).addEventListener("input", updateWho));
 
 document.getElementById("retry").addEventListener("click", () => {
   state.forEach((_, i) => (state[i] = { checked: false, correct: false }));
@@ -348,7 +379,16 @@ document.getElementById("retry").addEventListener("click", () => {
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
-document.getElementById("print").addEventListener("click", () => window.print());
+document.getElementById("print").addEventListener("click", () => {
+  const name = document.getElementById("sname").value.trim();
+  const sid = document.getElementById("sid").value.trim();
+  if (!name || !sid) {
+    alert("인쇄하기 전에 맨 위에 이름과 학번을 입력하세요.");
+    document.getElementById(name ? "sid" : "sname").focus();
+    return;
+  }
+  window.print();
+});
 
 render();
 </script>
