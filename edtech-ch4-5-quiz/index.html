@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>교육공학 4·5장 확인 퀴즈</title>
+<style>
+  :root {
+    --navy: #212d47;
+    --navy-d: #1a243d;
+    --red: #c00000;
+    --orange: #ed7d31;
+    --beige: #efe6dc;
+    --beige-d: #ccb7a2;
+    --tint: #f3f5f9;
+    --text: #222a35;
+    --muted: #6b7280;
+    --ok: #1d7a46;
+    --ok-bg: #e7f5ec;
+    --no: #b42318;
+    --no-bg: #fdecea;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "KoPubWorld돋움체 Medium", "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif;
+    color: var(--text);
+    background: #fff;
+    line-height: 1.6;
+  }
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 28px 20px 24px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header h1 { margin: 0 0 6px; font-size: 1.6rem; }
+  header p { margin: 0; color: #d5dbe7; font-size: 0.95rem; }
+  .dots { display: inline-flex; gap: 6px; margin-right: 10px; vertical-align: middle; }
+  .dots span { width: 14px; height: 14px; border-radius: 50%; background: var(--red); border: 3px solid #fff3; }
+  main { padding: 24px 20px 60px; }
+  .guide {
+    background: var(--beige);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+  }
+  .q {
+    background: var(--tint);
+    border-radius: 14px;
+    padding: 20px 20px 18px;
+    margin-bottom: 20px;
+  }
+  .q-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--red); color: #fff; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+  }
+  .tag {
+    font-size: 0.8rem; font-weight: 700; padding: 2px 10px; border-radius: 999px;
+    background: var(--navy); color: #fff;
+  }
+  .tag.ch { background: var(--beige-d); color: var(--navy); }
+  .stem { font-size: 1.05rem; font-weight: 700; margin: 6px 0 14px; }
+  .stem small { display: block; font-weight: 400; color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+  .options { display: grid; gap: 8px; }
+  .opt {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: #fff; border: 2px solid #e1e5ee; border-radius: 10px;
+    padding: 10px 14px; cursor: pointer; font-size: 1rem;
+  }
+  .opt:hover { border-color: var(--beige-d); }
+  .opt input { margin-top: 5px; accent-color: var(--navy); }
+  .opt.right { border-color: var(--ok); background: var(--ok-bg); }
+  .opt.wrong { border-color: var(--no); background: var(--no-bg); }
+  .ox { display: flex; gap: 14px; }
+  .ox .opt { flex: 1; justify-content: center; font-size: 1.6rem; font-weight: 700; padding: 14px; }
+  .ox .opt input { margin-top: 12px; }
+  input[type="text"] {
+    width: 100%; font: inherit; font-size: 1rem;
+    padding: 10px 14px; border: 2px solid #e1e5ee; border-radius: 10px; background: #fff;
+  }
+  input[type="text"]:focus { outline: none; border-color: var(--navy); }
+  input[type="text"].right { border-color: var(--ok); background: var(--ok-bg); }
+  input[type="text"].wrong { border-color: var(--no); background: var(--no-bg); }
+  .actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  button {
+    font: inherit; font-weight: 700; cursor: pointer;
+    border: none; border-radius: 10px; padding: 9px 18px;
+    background: var(--navy); color: #fff;
+  }
+  button:hover { background: var(--navy-d); }
+  button.ghost { background: #fff; color: var(--navy); border: 2px solid var(--navy); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .fb { margin-top: 14px; border-radius: 10px; padding: 12px 16px; display: none; }
+  .fb.show { display: block; }
+  .fb.right { background: var(--ok-bg); border: 1px solid #b7dfc6; }
+  .fb.wrong { background: var(--no-bg); border: 1px solid #f3c1bb; }
+  .fb .verdict { font-weight: 700; font-size: 1.05rem; }
+  .fb.right .verdict { color: var(--ok); }
+  .fb.wrong .verdict { color: var(--no); }
+  .fb .answer { margin: 6px 0; }
+  .fb .answer b { color: var(--navy); }
+  .fb .exp { margin: 6px 0 0; }
+  .fb ul { margin: 6px 0 0; padding-left: 20px; }
+  .fb li { margin-bottom: 3px; }
+  .fb .src { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
+  .result {
+    background: var(--navy); color: #fff; border-radius: 14px;
+    padding: 20px; text-align: center; margin-top: 28px;
+  }
+  .result .score { font-size: 2.2rem; font-weight: 700; color: var(--orange); }
+  .result p { margin: 6px 0 14px; color: #d5dbe7; }
+  .result button { background: var(--red); }
+  .result button.ghost { background: transparent; color: #fff; border-color: #fff; }
+  .hint { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
+  @media print {
+    header { background: #fff; color: var(--text); }
+    header p { color: var(--muted); }
+    .actions, .result button { display: none; }
+    .q { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1><span class="dots"><span></span><span></span></span>교육공학 확인 퀴즈</h1>
+    <p>4장 교수자 중심 수업과 수업설계 · 5장 학습자 중심 수업과 수업설계</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="guide">
+    모두 5문항입니다(객관식 2, 주관식 2, OX 1). 문항마다 <b>확인</b>을 누르면 정답과 해설이 바로 나옵니다.
+    끝까지 풀면 아래에 점수가 나옵니다. 답은 이 화면에만 보이고 어디에도 저장되지 않습니다.
+  </div>
+
+  <div id="quiz"></div>
+
+  <div class="result" id="result" hidden>
+    <div>내 점수</div>
+    <div class="score" id="score"></div>
+    <p id="comment"></p>
+    <button type="button" id="retry">다시 풀기</button>
+    <button type="button" class="ghost" id="print">결과 인쇄하기</button>
+  </div>
+</main>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "mc",
+    chapter: "4장",
+    stem: "교수자가 수업 시작 부분에서 «이 단원이 끝나면 여러분은 가스의 부피를 측정할 수 있습니다»라고 말했다. 가네의 9가지 수업사태 중 무엇에 해당하는가?",
+    options: ["주의 획득", "수업목표 제시", "선수학습 회상", "학습 안내 제시"],
+    answer: 1,
+    explain: "학습이 끝났을 때 무엇을 할 수 있게 되는지 알려 주어 기대감을 형성하는 것은 사태 2 «수업목표 제시»입니다. 학습자는 목표를 미리 알 때 더 잘 배웁니다.",
+    whyWrong: [
+      "주의 획득(사태 1)은 «이건 중요해», 흥미를 끄는 질문, 시청각 자극처럼 학습자의 주의를 끄는 단계입니다.",
+      null,
+      "선수학습 회상(사태 3)은 새 학습에 필요한 이전 학습을 확인하고 떠올리게 하는 단계입니다.",
+      "학습 안내 제시(사태 5)는 예, 시연, 도표, 힌트로 새 정보를 의미 있게 통합하도록 돕는 단계입니다."
+    ],
+    source: "교재 4장 109~111쪽, 4장 PPT «수업사태 1~3»"
+  },
+  {
+    type: "mc",
+    chapter: "5장",
+    stem: "다음 중 루브릭(rubric)에 대한 설명으로 옳지 않은 것은?",
+    options: [
+      "평가 준거(criteria)가 세부적으로 제시된다.",
+      "학습 결과를 점수가 아니라 상·중·하와 같은 단계로 표현한다.",
+      "각 단계에 수행의 질적 특징을 서술한 진술문(descriptors)이 있다.",
+      "평가의 객관성을 위해 학습자에게는 평가가 끝난 뒤에만 공개한다."
+    ],
+    answer: 3,
+    explain: "루브릭은 학습자에게도 미리 평가 준거를 알려 줍니다. 학습자는 평가 전에 기준에 비추어 스스로 준비하고, 평가 뒤에는 무엇을 고쳐야 할지 판단할 수 있습니다. 그래서 루브릭은 자기조절 능력을 길러 주고 피드백의 도구가 됩니다.",
+    whyWrong: [
+      "옳은 설명입니다. 예) 글쓰기: 글의 조직, 결론 도출, 맞춤법, 흥미도",
+      "옳은 설명입니다. 1·2·3 또는 상·중·하처럼 단계로 표현합니다.",
+      "옳은 설명입니다. 진술문은 관찰·측정 가능한 행동으로 씁니다.",
+      null
+    ],
+    source: "교재 5장 157~158쪽, 5장 PPT «루브릭»"
+  },
+  {
+    type: "short",
+    chapter: "4장",
+    stem: "켈러의 ARCS 모형에서 «C»는 무엇의 약자인가? 우리말로 쓰시오.",
+    hint: "예: 주의",
+    accept: ["자신감", "confidence", "자신감confidence", "confidence자신감"],
+    display: "자신감(Confidence)",
+    explain: "ARCS는 주의(Attention), 관련성(Relevance), 자신감(Confidence), 만족감(Satisfaction)입니다. 자신감은 «성공할 수 있다»고 느끼게 하는 요소로, 학습의 필요조건 제시, 성공의 기회 제시, 개인적 조절감 증대 전략이 있습니다.",
+    source: "교재 4장 116쪽·121~124쪽, 4장 PPT «ARCS 모형»"
+  },
+  {
+    type: "short",
+    chapter: "5장",
+    stem: "비고츠키가 말한 개념으로, 아동이 혼자서는 문제를 해결할 수 없지만 성인이나 더 뛰어난 동료와 함께하면 해결할 수 있는 영역을 무엇이라고 하는가?",
+    hint: "우리말 또는 영어 약자로 써도 됩니다.",
+    accept: ["근접발달영역", "zpd", "zoneofproximaldevelopment", "근접발달영역zpd", "zpd근접발달영역"],
+    display: "근접 발달 영역(ZPD, Zone of Proximal Development)",
+    explain: "근접 발달 영역은 가르침이 필요하고 진정한 학습이 가능한 단계입니다. 이 영역에서 주는 도움을 스캐폴딩이라고 하며, 학습자가 스스로 해낼 수 있게 되면 점차 걷어 냅니다.",
+    source: "교재 5장 139~140쪽, 5장 PPT «근접 발달 영역과 스캐폴딩»"
+  },
+  {
+    type: "ox",
+    chapter: "4장",
+    stem: "켈러의 이론에 따르면, 학습 동기를 가장 직접적으로 보여 주는 지표는 «수행»이다.",
+    answer: "X",
+    explain: "틀린 문장입니다. 학습 동기의 직접적인 지표는 «노력»입니다. 수행은 동기뿐 아니라 학습자의 능력, 학습 기회, 환경의 영향도 받기 때문입니다. 켈러는 노력(활동에 참여하는지), 수행(실제 성취), 결과(내적·외적 산물)를 구분했습니다.",
+    source: "교재 4장 114쪽, 4장 PPT «이론적 배경: 노력·수행·결과»"
+  }
+];
+
+const TYPE_LABEL = { mc: "객관식", short: "주관식", ox: "OX" };
+const state = QUESTIONS.map(() => ({ checked: false, correct: false }));
+
+function normalize(s) {
+  return s.toLowerCase().replace(/[\s()（）·.,\-_'"]/g, "");
+}
+
+function el(tag, attrs = {}, children = []) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v;
+    else if (k === "text") n.textContent = v;
+    else n.setAttribute(k, v);
+  }
+  for (const c of [].concat(children)) if (c) n.append(c);
+  return n;
+}
+
+function render() {
+  const quiz = document.getElementById("quiz");
+  quiz.innerHTML = "";
+  QUESTIONS.forEach((q, i) => {
+    const card = el("section", { class: "q", id: "q" + i });
+    card.append(el("div", { class: "q-head" }, [
+      el("span", { class: "num", text: String(i + 1) }),
+      el("span", { class: "tag", text: TYPE_LABEL[q.type] }),
+      el("span", { class: "tag ch", text: q.chapter })
+    ]));
+    const stem = el("div", { class: "stem", text: q.stem });
+    card.append(stem);
+
+    if (q.type === "mc" || q.type === "ox") {
+      const opts = q.type === "mc" ? q.options : ["O", "X"];
+      const box = el("div", { class: q.type === "ox" ? "options ox" : "options" });
+      opts.forEach((o, j) => {
+        const label = el("label", { class: "opt" }, [
+          el("input", { type: "radio", name: "q" + i, value: String(j) }),
+          el("span", { text: q.type === "mc" ? `${"①②③④"[j]} ${o}` : o })
+        ]);
+        box.append(label);
+      });
+      card.append(box);
+    } else {
+      const input = el("input", { type: "text", id: "a" + i, autocomplete: "off", placeholder: "답을 입력하세요" });
+      input.addEventListener("keydown", e => { if (e.key === "Enter") check(i); });
+      card.append(input);
+      if (q.hint) card.append(el("div", { class: "hint", text: q.hint }));
+    }
+
+    const btn = el("button", { type: "button", text: "확인" });
+    btn.addEventListener("click", () => check(i));
+    card.append(el("div", { class: "actions" }, [btn]));
+    card.append(el("div", { class: "fb", id: "fb" + i }));
+    quiz.append(card);
+  });
+}
+
+function check(i) {
+  const q = QUESTIONS[i];
+  const card = document.getElementById("q" + i);
+  const fb = document.getElementById("fb" + i);
+  let correct = false;
+  let chosen = null;
+
+  if (q.type === "short") {
+    const input = document.getElementById("a" + i);
+    const v = normalize(input.value);
+    if (!v) { input.focus(); return; }
+    correct = q.accept.map(normalize).includes(v);
+    input.classList.remove("right", "wrong");
+    input.classList.add(correct ? "right" : "wrong");
+  } else {
+    const picked = card.querySelector(`input[name="q${i}"]:checked`);
+    if (!picked) { alert("답을 하나 고르세요."); return; }
+    chosen = Number(picked.value);
+    const answerIdx = q.type === "mc" ? q.answer : (q.answer === "O" ? 0 : 1);
+    correct = chosen === answerIdx;
+    card.querySelectorAll(".opt").forEach((lab, j) => {
+      lab.classList.remove("right", "wrong");
+      if (j === answerIdx) lab.classList.add("right");
+      else if (j === chosen) lab.classList.add("wrong");
+    });
+  }
+
+  fb.innerHTML = "";
+  fb.className = "fb show " + (correct ? "right" : "wrong");
+  fb.append(el("div", { class: "verdict", text: correct ? "정답입니다!" : "오답입니다." }));
+
+  const ansText = q.type === "mc" ? `${"①②③④"[q.answer]} ${q.options[q.answer]}`
+                : q.type === "ox" ? q.answer : q.display;
+  const ans = el("div", { class: "answer" });
+  ans.append(el("b", { text: "정답: " }), document.createTextNode(ansText));
+  fb.append(ans);
+  fb.append(el("p", { class: "exp", text: q.explain }));
+
+  if (q.type === "mc") {
+    const ul = el("ul");
+    q.options.forEach((o, j) => {
+      if (j === q.answer || !q.whyWrong[j]) return;
+      const li = el("li");
+      li.append(el("b", { text: `${"①②③④"[j]} ` }), document.createTextNode(q.whyWrong[j]));
+      if (j === chosen) li.append(el("b", { text: "  ← 내가 고른 답" }));
+      ul.append(li);
+    });
+    fb.append(el("div", { class: "answer" }, [el("b", { text: q.answer === 3 ? "나머지 보기: " : "오답 해설: " })]));
+    fb.append(ul);
+  }
+  fb.append(el("div", { class: "src", text: "참고: " + q.source }));
+
+  state[i] = { checked: true, correct };
+  updateResult();
+}
+
+function updateResult() {
+  const done = state.filter(s => s.checked).length;
+  const result = document.getElementById("result");
+  if (done < QUESTIONS.length) { result.hidden = true; return; }
+  const score = state.filter(s => s.correct).length;
+  document.getElementById("score").textContent = `${score} / ${QUESTIONS.length}`;
+  const wrong = state.map((s, i) => s.correct ? null : i + 1).filter(Boolean);
+  document.getElementById("comment").textContent = wrong.length === 0
+    ? "모두 맞혔습니다. 4·5장의 핵심을 잘 이해하고 있어요."
+    : `${wrong.join(", ")}번 문항의 해설을 다시 읽고, 표시된 PPT 슬라이드를 복습해 보세요.`;
+  result.hidden = false;
+}
+
+document.getElementById("retry").addEventListener("click", () => {
+  state.forEach((_, i) => (state[i] = { checked: false, correct: false }));
+  document.getElementById("result").hidden = true;
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+document.getElementById("print").addEventListener("click", () => window.print());
+
+render();
+</script>
+</body>
+</html>
